@@ -1,0 +1,14 @@
+May use this later
+Name:           Hex:
+Primary
+--oxford-blue: #001427ff;
+
+Text Box Color
+--cool-grey: #8c86aaff;
+
+Text Color
+--honeydew: #f3fcf0ff;
+
+Idk bout these yet
+--cafe-au-lait: #a57548ff;
+--burnt-umber: #8c271eff;
