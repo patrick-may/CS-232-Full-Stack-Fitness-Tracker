@@ -38,3 +38,50 @@ class Gym_Member:
     @sex.setter
     def sex(self, new_sex):
         self._sex = new_sex
+
+#Gym member information is all stored within gym_members table
+class Gym_Member_DB:
+
+    def __init__(self, db_conn, db_cursor):
+        self._db_conn = db_conn
+        self._cursor = db_cursor
+
+    #Create
+    def insert_individual_member(self, gym_member):
+        insert_query = """
+            INSERT INTO gym_members (name, age, sex)
+            VALUES (%s, %s, %s);
+        """
+    
+        self._cursor.execute(insert_query, (gym_member.name, gym_member.age, gym_member.sex))
+        self._cursor.execute("SELECT LAST_INSERT_ID() gym_id")
+        task_id = self._cursor.fetchone()
+        self._db_conn.commit()
+
+    #Read
+    def select_individual_member(self, member_id):
+        individual_select_query = """
+            SELECT * from gym_members WHERE gym_id = %s;
+        """
+        self._cursor.execute(individual_select_query, (member_id,))
+        return self._cursor.fetchall()
+
+    #Update
+    def update_member_info(self, member_id, updated_member):
+        update_query = """
+            UPDATE gym_members
+            SET name=%s, age=%s, sex=%s
+            WHERE gym_id=%s;
+        """
+        self._cursor.execute(update_query, (updated_member.name, updated_member.age, updated_member.sex, member_id))
+        self._db_conn.commit()
+
+    #Delete
+    def delete_member(self, member_id):
+        delete_query = """
+            DELETE from gym_members
+            WHERE gym_id=%s;
+        """
+
+        self._cursor.execute(delete_query, (member_id,))
+        self._db_conn.commit()

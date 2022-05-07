@@ -1,43 +1,29 @@
 """
 Data class for what a workout object will be
+
+Current design is a little bit tricky, as the actual exercises are
+Stored in another table. Current idea is to timestamp whenever an exercise is done
+And then identify exercises of that workout if they are within workout begin and workout ending
+
 """
 class Workout:
-    def __init__(self, gym_id, date, duration, excercises):
+    def __init__(self, gym_id, date_time, duration, weight_sets):
         self._gym_id = gym_id
-        #date should be recieved in 
-        date_info = date.split("/")
-        self._month = date_info[0]
-        self._day = date_info[1]
-        self._year = date_info[2]
+        self._date_time = date_time
         self._duration = duration
-
-        #excercises should be a list of machines used. 
-        #proper overloading support coming soon
-        self._excercises = excercises
+        self._weight_sets = weight_sets
     
     @property
     def month(self):
         return self._month
 
-    @month.setter
-    def month(self, new_month):
-        self._month = new_month
-
     @property
-    def day(self):
-        return self._day
+    def timestamp(self):
+        return self._date_time
 
-    @day.setter
-    def day(self, new_day):
-        self._day = new_day
-
-    @property
-    def year(self):
-        return self._year
-
-    @year.setter
-    def year(self, new_year):
-        self._year = new_year
+    @timestamp.setter
+    def date(self, new_date):
+        self._date_time = new_date
 
     @property
     def excercises(self):
@@ -49,3 +35,41 @@ class Workout:
     
     def add_excercise(self, new_ex):
         self._excercises.append(new_ex)
+
+class WorkoutDB:
+    def __init__(self, db_conn, db_cursor):
+        self._db_conn = db_conn
+        self._cursor = db_cursor
+
+    #Create
+    def insert_workout(self, new_workout):
+        insert_workout_query = """
+            INSERT INTO workouts (gym_id, date_time, duration)
+            VALUES (%s, %s, %s);
+        """
+        workout_tuple = (new_workout.gym_id, new_workout.timestamp, new_workout.duration)
+        self._cursor.execute(insert_workout_query, workout_tuple)
+
+        for weight_set in new_workout.exercises:
+            insert_exercise_query = """
+                INSERT INTO exercise_sets (machine_name, gym_id, date_time, reps, weight)
+                VALUES (%s, %s, %s, %s, %s);
+            """
+
+            exercise_tuple = (weight_set.name, weight_set.gym_id, 
+                        weight_set.timestamp, weight_set.reps, weight_set.weight)
+
+            self._cursor.execute(insert_exercise_query, exercise_tuple)
+        
+        self._db_conn.commit()
+    
+    #Read
+    def select_workout(self, gym_id, date):
+        select_query = """
+            SELECT * from workouts
+            WHERE gym_id=%s, date_time=%s;
+        """
+        
+
+    
+            
