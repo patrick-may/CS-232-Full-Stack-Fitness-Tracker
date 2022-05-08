@@ -42,14 +42,30 @@ def init_db(config):
     #member table init
     cursor.execute(
         f""" 
-        CREATE TABLE members
+        CREATE TABLE gym_members
         (
             gym_id SMALLINT UNSIGNED AUTO_INCREMENT NOT NULL,
-            first_name VARCHAR(50),
-            last_name VARCHAR(50),
+            name VARCHAR(100),
             creation_datetime timestamp,
             age TINYINT UNSIGNED, 
-            PRIMARY KEY (gym_i
+            sex CHAR(1),
+            PRIMARY KEY (gym_id)
+        );
+        CREATE TABLE workouts
+        (
+            gym_id SMALLINT,
+            workout_date VARCHAR(100),
+            duration TINYINT,
+            PRIMARY KEY (gym_id, workout_date)
+        );
+        CREATE TABLE exercise_sets
+        (
+            gym_id SMALLINT,
+            machine_name VARCHAR(100),
+            exercise_date_time VARCHAR(100),
+            reps TINYINT UNSIGNED,
+            weight TINYINT,
+            PRIMARY KEY (gym_id, machine_name, exercise_date_time)
         );
         """
     )
