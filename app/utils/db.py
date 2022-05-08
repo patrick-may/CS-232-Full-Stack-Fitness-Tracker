@@ -2,7 +2,11 @@
 Collection of functions to help establish the database
 """
 import mysql.connector
+import click
+from flask.cli import with_appcontext
 
+def init_app(app):
+    app.cli.add_command(init_db)
 
 # Connect to MySQL and the task database
 def connect_db(config):
@@ -71,3 +75,4 @@ def init_db(config):
     )
     cursor.close()
     conn.close()
+    click.echo("Initialized db")

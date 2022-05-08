@@ -19,7 +19,7 @@ class Gym_Member:
     def gym_id(self):
         return self._id
 
-    @id.setter
+    @gym_id.setter
     def gym_id(self, new_id):
         self._id = new_id
 
@@ -58,6 +58,14 @@ class Gym_Member_DB:
         task_id = self._cursor.fetchone()
         self._db_conn.commit()
 
+    #Read All
+    def select_all_members(self):
+        full_query = """
+            SELECT * from gym_members;
+        """
+        self._cursor.execute(full_query)
+        return self._cursor.fetchall()
+        
     #Read
     def select_individual_member(self, member_id):
         individual_select_query = """
