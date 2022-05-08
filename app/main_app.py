@@ -24,6 +24,7 @@ from views.task_view import task_list_blueprint
 from api.task_api import task_api_blueprint
 
 from views.crud_lifter_view import crud_lifter_blueprint
+from api.lifter_api import lifter_api_blueprint
 import utils.db as DBUtils
 
 # Load all the private data from the 
@@ -52,6 +53,7 @@ app.config["SECRET_KEY"] = uuid.uuid4().hex
 #app.register_blueprint(task_list_blueprint)
 #app.register_blueprint(task_api_blueprint)
 app.register_blueprint(crud_lifter_blueprint)
+app.register_blueprint(lifter_api_blueprint)
 
 
 # Helper function to establish a connection to the database

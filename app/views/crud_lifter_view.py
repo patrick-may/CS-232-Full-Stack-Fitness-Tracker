@@ -33,3 +33,11 @@ def member_creation():
 @crud_lifter_blueprint.route('/delete_member')
 def member_deletion():
     return render_template("member-deletion.html")
+
+@crud_lifter_blueprint.route("/remove_account", methods=["POST"])
+def remove_member():
+    user_id = request.form.get("member_id")
+    delete_db = Gym_Member_DB(g.mysql_db, g.mysql_cursor)
+
+    delete_db.delete_member(user_id)
+    return redirect("/")

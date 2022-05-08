@@ -1,5 +1,5 @@
 # Class for modeling what a gym member is, currently POD Class
-
+from datetime import datetime
 class Gym_Member:
     def __init__(self, name, gym_id, age, sex):
         self._name = name
@@ -49,11 +49,11 @@ class Gym_Member_DB:
     #Create
     def insert_individual_member(self, gym_member):
         insert_query = """
-            INSERT INTO gym_members (name, age, sex)
-            VALUES (%s, %s, %s);
+            INSERT INTO gym_members (name, age, sex, creation_datetime)
+            VALUES (%s, %s, %s, %s);
         """
     
-        self._cursor.execute(insert_query, (gym_member.name, gym_member.age, gym_member.sex))
+        self._cursor.execute(insert_query, (gym_member.name, gym_member.age, gym_member.sex, datetime.now()))
         self._cursor.execute("SELECT LAST_INSERT_ID() gym_id")
         task_id = self._cursor.fetchone()
         self._db_conn.commit()

@@ -69,6 +69,8 @@ class WorkoutDB:
             SELECT * from workouts
             WHERE gym_id=%s, date_time=%s;
         """
+        self._cursor.execute(select_query, (gym_id, date))
+        
         
 
     

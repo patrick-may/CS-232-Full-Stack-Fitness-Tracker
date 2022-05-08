@@ -60,7 +60,8 @@ def init_db(config):
             gym_id SMALLINT,
             workout_date VARCHAR(100),
             duration TINYINT,
-            PRIMARY KEY (gym_id, workout_date)
+            PRIMARY KEY (gym_id, workout_date),
+            FOREIGN KEY (gym_id) REFERENCES gym_members(gym_id)
         );
         CREATE TABLE exercise_sets
         (
@@ -69,7 +70,9 @@ def init_db(config):
             exercise_date_time VARCHAR(100),
             reps TINYINT UNSIGNED,
             weight TINYINT,
-            PRIMARY KEY (gym_id, machine_name, exercise_date_time)
+            PRIMARY KEY (gym_id, machine_name, exercise_date_time),
+            FOREIGN KEY (gym_id, machine_name, exercise_date_time) 
+                REFERENCES workouts(gym_id, workout_date)
         );
         """
     )
