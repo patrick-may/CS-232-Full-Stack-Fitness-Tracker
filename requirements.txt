@@ -1,4 +1,5 @@
 flask
+Flask-login
 pytest
 mysql-connector-python
 python-dotenv

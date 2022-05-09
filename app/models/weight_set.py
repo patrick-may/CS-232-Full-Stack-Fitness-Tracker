@@ -80,7 +80,7 @@ class Weight_Set_DB:
     #Read all from a workout
     def select_workout_exercises(self, user_id, date):
         select_query = """
-            SELECT * from exercise_sets WHERE gym_id=%s, date_time=%s;
+            SELECT * FROM exercise_sets WHERE gym_id=%s, date_time=%s;
         """
         select_tuple = (user_id, date)
         self._cursor.execute(select_query, select_tuple)
@@ -89,7 +89,7 @@ class Weight_Set_DB:
     #Read
     def select_weight_set(self, machine_name, user_id, timestamp):
         select_query = """
-            SELECT * from exercise_sets WHERE machine_name=%s, gym_id=%s, date_time=%s;
+            SELECT * FROM exercise_sets WHERE machine_name=%s, gym_id=%s, date_time=%s;
         """
         select_tuple = (machine_name, user_id, timestamp)
 
@@ -114,7 +114,7 @@ class Weight_Set_DB:
     #Delete
     def delete_weight_set(self, machine_name, user_id, timestamp):
         delete_query = """
-            DELETE from exercise_sets
+            DELETE FROM exercise_sets
             WHERE machine_name=%s, gym_id=%s, date_time=%s;
         """
 

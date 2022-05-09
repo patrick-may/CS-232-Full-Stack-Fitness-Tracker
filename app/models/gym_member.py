@@ -1,5 +1,6 @@
 # Class for modeling what a gym member is, currently POD Class
 from datetime import datetime
+
 class Gym_Member:
     def __init__(self, name, gym_id, age, sex):
         self._name = name
@@ -61,7 +62,7 @@ class Gym_Member_DB:
     #Read All
     def select_all_members(self):
         full_query = """
-            SELECT * from gym_members;
+            SELECT * FROM gym_members;
         """
         self._cursor.execute(full_query)
         return self._cursor.fetchall()
@@ -69,7 +70,7 @@ class Gym_Member_DB:
     #Read
     def select_individual_member(self, member_id):
         individual_select_query = """
-            SELECT * from gym_members WHERE gym_id = %s;
+            SELECT * FROM gym_members WHERE gym_id = %s;
         """
         self._cursor.execute(individual_select_query, (member_id,))
         return self._cursor.fetchall()
@@ -87,7 +88,7 @@ class Gym_Member_DB:
     #Delete
     def delete_member(self, member_id):
         delete_query = """
-            DELETE from gym_members
+            DELETE FROM gym_members
             WHERE gym_id=%s;
         """
 

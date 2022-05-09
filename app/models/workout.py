@@ -6,7 +6,6 @@ Stored in another table. Current idea is to timestamp whenever an exercise is do
 And then identify exercises of that workout if they are within workout begin and workout ending
 
 """
-from xxlimited import new
 
 
 class Workout:
@@ -69,7 +68,7 @@ class WorkoutDB:
     #Read
     def select_workout(self, gym_id, date):
         select_query = """
-            SELECT * from workouts
+            SELECT * FROM workouts
             WHERE gym_id=%s, date_time=%s;
         """
         self._cursor.execute(select_query, (gym_id, date))
@@ -97,13 +96,13 @@ class WorkoutDB:
 
     def delete_workout(self, gym_id, date):
         delete_query = """
-        DELETE from workouts
+        DELETE FROM workouts
         WHERE gym_id=%s, date_time=%s;
         """
         self._cursor.execute(delete_query, (gym_id, date))
 
         sets_delete_query = """
-        DELETE from exercise_sets
+        DELETE FROM exercise_sets
         WHERE gym_id=%s, date=%s;
         """
         self._cursor.execute(sets_delete_query, (gym_id, date))

@@ -1,6 +1,7 @@
-from flask import Blueprint, request, redirect
+from flask import Blueprint, request, redirect, Flask
 from flask import render_template, g, Blueprint
-#from api.task_api import Task, TaskDB
+from flask_login import LoginManager
+import click
 from models.gym_member import Gym_Member, Gym_Member_DB
 
 crud_lifter_blueprint = Blueprint('crud_lifter_blueprint', __name__)
@@ -12,6 +13,24 @@ def home_page():
     display_data = memberDB.select_all_members()
     
     return render_template("home-page.html", data=display_data)
+
+"""
+Incomplete login thing
+@crud_lifter_blueprint("/login", methods = ["GET", "POST"])
+def login():
+    form = LoginForm()
+
+    if form.validate_on_submit():
+        login_user(user)
+        click.echo("Logged in successfully")
+        next = Flask.request.args.get('next')
+
+        if not is_safe_url(next):
+            return Flask.abort(400)
+        
+        return 
+"""
+
 
 @crud_lifter_blueprint.route('/create_member')
 def gather_member_info():
