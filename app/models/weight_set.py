@@ -77,6 +77,15 @@ class Weight_Set_DB:
         self._cursor.execute(insert_query, insert_values)
         self._db_conn.commit()
     
+    #Read all from a workout
+    def select_workout_exercises(self, user_id, date):
+        select_query = """
+            SELECT * from exercise_sets WHERE gym_id=%s, date_time=%s;
+        """
+        select_tuple = (user_id, date)
+        self._cursor.execute(select_query, select_tuple)
+        return self._cursor.fetchall()
+        
     #Read
     def select_weight_set(self, machine_name, user_id, timestamp):
         select_query = """

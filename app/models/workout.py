@@ -6,6 +6,9 @@ Stored in another table. Current idea is to timestamp whenever an exercise is do
 And then identify exercises of that workout if they are within workout begin and workout ending
 
 """
+from xxlimited import new
+
+
 class Workout:
     def __init__(self, gym_id, date_time, duration, weight_sets):
         self._gym_id = gym_id
@@ -71,7 +74,40 @@ class WorkoutDB:
         """
         self._cursor.execute(select_query, (gym_id, date))
         
+        from weight_set import Weight_Set_DB
+        exercisesDB = Weight_Set_DB(self._db_conn, self._cursor)
+        exercisesDB.select_workout_exercises(gym_id, date)
+        return self._cursor.fetchall()
+
+    def update_workout(self, old_workout, new_workout):
+        from weight_set import Weight_Set_DB
+        exercisesDB = Weight_Set_DB(self._db_conn, self._cursor)
+
+        if old_workout.gym_id == new_workout.gym_id and old_workout.timestamp == new_workout.timestamp:
+            #then it is the "same" workout, just just update the exercises.
+            for machine, user_id, timestamp, x, y in old_workout.exercises:
+                exercisesDB.delete_weight_set(machine,user_id, timestamp)
+
+            for machine, user_id, timestamp, x, y in new_workout.exercises:
+                exercisesDB.insert_weight_set(machine,user_id, timestamp)
         
+        else:
+            self.delete_workout(old_workout)
+            self.insert_workout(new_workout)
+
+    def delete_workout(self, gym_id, date):
+        delete_query = """
+        DELETE from workouts
+        WHERE gym_id=%s, date_time=%s;
+        """
+        self._cursor.execute(delete_query, (gym_id, date))
+
+        sets_delete_query = """
+        DELETE from exercise_sets
+        WHERE gym_id=%s, date=%s;
+        """
+        self._cursor.execute(sets_delete_query, (gym_id, date))
+        self._db_conn.commit()
 
     
             
