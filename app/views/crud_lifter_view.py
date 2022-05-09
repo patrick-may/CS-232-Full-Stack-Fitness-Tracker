@@ -3,6 +3,7 @@ from flask import render_template, g, Blueprint
 from flask_login import LoginManager
 import click
 from models.gym_member import Gym_Member, Gym_Member_DB
+from models.weight_set import Weight_Set_DB, Weight_Set
 
 crud_lifter_blueprint = Blueprint('crud_lifter_blueprint', __name__)
 
@@ -11,8 +12,13 @@ def home_page():
     memberDB = Gym_Member_DB(g.mysql_db, g.mysql_cursor)
 
     display_data = memberDB.select_all_members()
-    
-    return render_template("home-page.html", data=display_data)
+
+    setDB = Weight_Set_DB(g.mysql_db, g.mysql_cursor)
+
+    weight_data = setDB.select_all_exercises()
+
+    return render_template("home-page.html", data=display_data, weight_data=weight_data)
+    #return render_template("home-page.html", data=display_data)
 
 """
 Incomplete login thing
@@ -42,7 +48,7 @@ def member_creation():
     new_member_age = request.form.get("member_age")
     new_member_sex = request.form.get("member_sex")
 
-    new_member = Gym_Member(new_member_name, 0, new_member_age, new_member_sex)
+    new_member = Gym_Member(new_member_name, new_member_age, new_member_sex)
     add_db = Gym_Member_DB(g.mysql_db, g.mysql_cursor)
 
     add_db.insert_individual_member(new_member)
@@ -59,4 +65,19 @@ def remove_member():
     delete_db = Gym_Member_DB(g.mysql_db, g.mysql_cursor)
 
     delete_db.delete_member(user_id)
+    return redirect("/")
+
+@crud_lifter_blueprint.route("/create_weight_set")
+def gather_set_info():
+    return render_template("weight-set-entry.html")
+
+@crud_lifter_blueprint.route("/add_weight_set", methods=["POST"])
+def set_creation():
+    machine_name = request.form.get("machine_name")
+    user_id = request.form.get("user_id")
+    date = request.form.get("date")
+    reps = request.form.get("reps")
+    weight = request.form.get("weight")
+    setDB = Weight_Set_DB(g.mysql_db, g.mysql_cursor)
+    setDB.insert_weight_set(Weight_Set(machine_name, user_id, date, reps, weight))
     return redirect("/")

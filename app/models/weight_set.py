@@ -20,7 +20,7 @@ class Weight_Set:
     
     @property
     def machine_name(self):
-        return self._name
+        return self._machine_name
     
     @machine_name.setter
     def machine_name(self, new_name):
@@ -67,11 +67,11 @@ class Weight_Set_DB:
     #Create
     def insert_weight_set(self, new_weight_set):
         insert_query = """
-            INSERT INTO exercise_sets (machine_name, gym_id, date_time, reps, weight)
+            INSERT INTO exercise_sets (machine_name, gym_id, exercise_date_time, reps, weight)
             VALUES (%s, %s, %s, %s, %s)
         """
 
-        insert_values = (new_weight_set.name, new_weight_set.gym_id, 
+        insert_values = (new_weight_set.machine_name, new_weight_set.user_id, 
                         new_weight_set.timestamp, new_weight_set.reps, new_weight_set.weight)
 
         self._cursor.execute(insert_query, insert_values)
@@ -80,16 +80,24 @@ class Weight_Set_DB:
     #Read all from a workout
     def select_workout_exercises(self, user_id, date):
         select_query = """
-            SELECT * FROM exercise_sets WHERE gym_id=%s, date_time=%s;
+            SELECT * FROM exercise_sets WHERE gym_id=%s AND exercise_date_time=%s;
         """
         select_tuple = (user_id, date)
         self._cursor.execute(select_query, select_tuple)
+        return self._cursor.fetchall()
+
+    #Read all from DB
+    def select_all_exercises(self):
+        full_select_query = """
+            SELECT * FROM exercise_sets;
+        """
+        self._cursor.execute(full_select_query)
         return self._cursor.fetchall()
         
     #Read
     def select_weight_set(self, machine_name, user_id, timestamp):
         select_query = """
-            SELECT * FROM exercise_sets WHERE machine_name=%s, gym_id=%s, date_time=%s;
+            SELECT * FROM exercise_sets WHERE machine_name=%s AND gym_id=%s AND exercise_date_time=%s;
         """
         select_tuple = (machine_name, user_id, timestamp)
 
@@ -101,11 +109,11 @@ class Weight_Set_DB:
         update_query = """
             UPDATE exercise_sets
             SET reps=%s, weight=%s
-            WHERE machine_name=%s, gym_id=%s, date_time=%s;
+            WHERE machine_name=%s AND gym_id=%s AND exercise_date_time=%s;
         """
 
         update_tuple = (update_set.reps, update_set.weight,
-                        update_set.machine_name, update_set.gym_id,
+                        update_set.machine_name, update_set.user_id,
                         update_set.timestamp)
         
         self._cursor.execute(update_query, update_tuple)
@@ -115,7 +123,7 @@ class Weight_Set_DB:
     def delete_weight_set(self, machine_name, user_id, timestamp):
         delete_query = """
             DELETE FROM exercise_sets
-            WHERE machine_name=%s, gym_id=%s, date_time=%s;
+            WHERE machine_name=%s AND gym_id=%s AND exercise_date_time=%s;
         """
 
         delete_tuple = (machine_name, user_id, timestamp)

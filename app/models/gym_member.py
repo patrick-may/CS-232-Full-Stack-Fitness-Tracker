@@ -1,13 +1,16 @@
 # Class for modeling what a gym member is, currently POD Class
 from datetime import datetime
 
+from types import NoneType
+
 class Gym_Member:
-    def __init__(self, name, gym_id, age, sex):
+    def __init__(self, name, age, sex):
         self._name = name
-        self._id = gym_id
+        self._id = NoneType
         self._age = age
         self._sex = sex
 
+  
     @property
     def name(self):
         return self._name
@@ -56,7 +59,8 @@ class Gym_Member_DB:
     
         self._cursor.execute(insert_query, (gym_member.name, gym_member.age, gym_member.sex, datetime.now()))
         self._cursor.execute("SELECT LAST_INSERT_ID() gym_id")
-        task_id = self._cursor.fetchone()
+        mem_gym_id = self._cursor.fetchone()
+        gym_member.gym_id = mem_gym_id
         self._db_conn.commit()
 
     #Read All
@@ -70,7 +74,7 @@ class Gym_Member_DB:
     #Read
     def select_individual_member(self, member_id):
         individual_select_query = """
-            SELECT * FROM gym_members WHERE gym_id = %s;
+            SELECT * FROM gym_members WHERE gym_id=%s;
         """
         self._cursor.execute(individual_select_query, (member_id,))
         return self._cursor.fetchall()

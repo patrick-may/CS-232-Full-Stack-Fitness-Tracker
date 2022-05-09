@@ -9,6 +9,9 @@
         <div class="css.lifter-style.center">
             <a href="/create_member">Create Member</a>
             <a href="/delete_member">Delete Member</a>
+            <br>
+            <a href="/create_weight_set">Add Weight Set</a>
+
             <div>
                 <p>These are all the members:</p>
                 {% for member in data %}
@@ -16,8 +19,13 @@
                     <br>
                 {% endfor %}
             </div>
+            <div>
+                <p>These are all the weight sets: </p>
+                {% for set in weight_data %}
+                    <td>{{ set['machine_name']}}, {{ set['gym_id']}}, {{ set['exercise_date_time']}}, {{ set['reps']}}, {{ set['weight']}},</td>
+                    <br>
+                {% endfor %}
+            </div>
         </div>
-        <!-- Jinja templating code that we can redefine for other pages -->
-        
     </body>
 </html>

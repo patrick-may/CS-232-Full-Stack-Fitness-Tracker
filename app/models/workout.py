@@ -15,9 +15,13 @@ class Workout:
         self._duration = duration
         self._weight_sets = weight_sets
     
+    @property 
+    def user_id(self):
+        return self._gym_id
+
     @property
-    def month(self):
-        return self._month
+    def duration(self):
+        return self._duration
 
     @property
     def timestamp(self):
@@ -28,15 +32,15 @@ class Workout:
         self._date_time = new_date
 
     @property
-    def excercises(self):
-        return self._excercises
+    def exercises(self):
+        return self._weight_sets
     
-    @excercises.setter
-    def excercises(self, replacement_ex_list):
-        self._excercises = replacement_ex_list
+    @exercises.setter
+    def exercises(self, replacement_ex_list):
+        self._weight_sets = replacement_ex_list
     
     def add_excercise(self, new_ex):
-        self._excercises.append(new_ex)
+        self._weight_sets.append(new_ex)
 
 class WorkoutDB:
     def __init__(self, db_conn, db_cursor):
@@ -46,19 +50,19 @@ class WorkoutDB:
     #Create
     def insert_workout(self, new_workout):
         insert_workout_query = """
-            INSERT INTO workouts (gym_id, date_time, duration)
+            INSERT INTO workouts (gym_id, workout_date, duration)
             VALUES (%s, %s, %s);
         """
-        workout_tuple = (new_workout.gym_id, new_workout.timestamp, new_workout.duration)
+        workout_tuple = (new_workout.user_id, new_workout.timestamp, new_workout.duration)
         self._cursor.execute(insert_workout_query, workout_tuple)
 
         for weight_set in new_workout.exercises:
             insert_exercise_query = """
-                INSERT INTO exercise_sets (machine_name, gym_id, date_time, reps, weight)
+                INSERT INTO exercise_sets (machine_name, gym_id, workout_date, reps, weight)
                 VALUES (%s, %s, %s, %s, %s);
             """
 
-            exercise_tuple = (weight_set.name, weight_set.gym_id, 
+            exercise_tuple = (weight_set.machine_name, weight_set.user_id, 
                         weight_set.timestamp, weight_set.reps, weight_set.weight)
 
             self._cursor.execute(insert_exercise_query, exercise_tuple)
@@ -69,7 +73,7 @@ class WorkoutDB:
     def select_workout(self, gym_id, date):
         select_query = """
             SELECT * FROM workouts
-            WHERE gym_id=%s, date_time=%s;
+            WHERE gym_id=%s AND workout_date=%s;
         """
         self._cursor.execute(select_query, (gym_id, date))
         
@@ -77,6 +81,7 @@ class WorkoutDB:
         exercisesDB = Weight_Set_DB(self._db_conn, self._cursor)
         exercisesDB.select_workout_exercises(gym_id, date)
         return self._cursor.fetchall()
+    
 
     def update_workout(self, old_workout, new_workout):
         from weight_set import Weight_Set_DB
@@ -97,13 +102,13 @@ class WorkoutDB:
     def delete_workout(self, gym_id, date):
         delete_query = """
         DELETE FROM workouts
-        WHERE gym_id=%s, date_time=%s;
+        WHERE gym_id=%s AND workout_date=%s;
         """
         self._cursor.execute(delete_query, (gym_id, date))
 
         sets_delete_query = """
         DELETE FROM exercise_sets
-        WHERE gym_id=%s, date=%s;
+        WHERE gym_id=%s AND workout_date=%s;
         """
         self._cursor.execute(sets_delete_query, (gym_id, date))
         self._db_conn.commit()

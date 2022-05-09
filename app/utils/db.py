@@ -5,9 +5,10 @@ import mysql.connector
 import click
 from flask.cli import with_appcontext
 
+
 def init_app(app):
     app.cli.add_command(init_db)
-
+    
 # Connect to MySQL and the task database
 def connect_db(config):
     conn = mysql.connector.connect(
@@ -45,7 +46,7 @@ def init_db(config):
     #)
     #member table init
     cursor.execute(
-        f""" 
+        """ 
         CREATE TABLE gym_members
         (
             gym_id SMALLINT UNSIGNED AUTO_INCREMENT NOT NULL,
@@ -54,28 +55,31 @@ def init_db(config):
             age TINYINT UNSIGNED, 
             sex CHAR(1),
             PRIMARY KEY (gym_id)
-        );
+        ); """)
+
+    cursor.execute( """
         CREATE TABLE workouts
         (
-            gym_id SMALLINT,
+            gym_id SMALLINT UNSIGNED NOT NULL,
             workout_date VARCHAR(100),
             duration TINYINT,
-            PRIMARY KEY (gym_id, workout_date),
-            FOREIGN KEY (gym_id) REFERENCES gym_members(gym_id)
+            PRIMARY KEY (gym_id, workout_date)
         );
+    """ )
+
+    cursor.execute( """
         CREATE TABLE exercise_sets
         (
-            gym_id SMALLINT,
+            gym_id SMALLINT UNSIGNED,
             machine_name VARCHAR(100),
             exercise_date_time VARCHAR(100),
             reps TINYINT UNSIGNED,
-            weight TINYINT,
-            PRIMARY KEY (gym_id, machine_name, exercise_date_time),
-            FOREIGN KEY (gym_id, machine_name, exercise_date_time) 
-                REFERENCES workouts(gym_id, workout_date)
+            weight SMALLINT,
+            PRIMARY KEY (gym_id, machine_name, exercise_date_time)
+            
         );
-        """
-    )
+        """)
+
     cursor.close()
     conn.close()
-    click.echo("Initialized db")
+    click.echo("DB Initialized")
