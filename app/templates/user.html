@@ -1,8 +1,30 @@
-{% extends 'base.html' %} {% block title %} User {% endblock %} {% block content
-%} {% with messages = get_flashed_messages() %} {% if messages %} {% for msg in
-messages%}
-<p>{{msg}}</p>
-{% endfor %} {% endif %} {% endwith %}
-<h3>Welcome, {{user}}</h3>
-<p>Please enter your workout statistics</p>
-{% endblock %}
+{% extends 'base.html' %} {% block title %} User {% endblock %} 
+{% block content%} 
+{% with messages = get_flashed_messages() %} {% if messages %} {% for msg in
+    messages%}
+    <p>{{msg}}</p>
+    {% endfor %} {% endif %} {% endwith %}
+    <h3>Welcome, {{user}}</h3>
+    <a href="/create_weight_set">Add Weight Set</a>
+
+    <hr class="solid">
+    <table>
+        <TR>
+            <TD class="c1">MACHINE</TD>
+            <TD class="c2">DATE</TD>
+            <TD class="c3">WEIGHT</TD>
+            <TD class="c4">REPS</TD>
+        </TR>
+    {% for set in member_sets %}
+    <TR>
+        <TD class="c1">{{set["machine_name"]}}</TD>
+        <TD class="c2">{{set["exercise_date"]}}</TD>
+        <TD class="c3">{{set["weight"]}}</TD>
+        <TD class="c4">{{set["reps"]}}</TD>
+    </TR>
+    {% endfor %}
+    </table>
+   
+
+    {% endblock %}
+    

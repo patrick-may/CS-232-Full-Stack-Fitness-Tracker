@@ -1,7 +1,9 @@
-{% extends "task-layout.html" %}
-
-{% block body %}
-    <h1>New Member</h1>
+{% extends "base.html" %}
+{% block title %}
+Member Deletion
+{% endblock %}
+{% block content %}
+    <h1>Delete Member by ID</h1>
     <form action="/remove_account" method="post">
         <input autocomplete="off" autofocus name="member_id" placeholder="Member ID" type="text">
         <input type="submit" value="Delete User">

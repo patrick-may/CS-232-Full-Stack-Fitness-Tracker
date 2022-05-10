@@ -6,4 +6,28 @@ messages%}
 <p>Hello, {{user}}</p>
 <a href="/create_member">Create Member</a>
 <a href="/delete_member">Delete Member</a>
+
+<br>
+<hr class="solid">
+
+<table>
+    <TR>
+        <TD class="c1">GYM ID</TD>
+        <TD class="c2">USER'S NAME</TD>
+        <TD class="c3">AGE</TD>
+        <TD class="c4">SEX</TD>
+    </TR>
+{% for users in gym_member_list %}
+<TR>
+    <TD class="c1">{{users["gym_id"]}}</TD>
+    <TD class="c2">{{users["name"]}}</TD>
+    <TD class="c3">{{users["age"]}}</TD>
+    <TD class="c4">{{users["sex"]}}</TD>
+</TR>
+{% endfor %}
+</table>
+
+
 {% endblock %}
+
+
