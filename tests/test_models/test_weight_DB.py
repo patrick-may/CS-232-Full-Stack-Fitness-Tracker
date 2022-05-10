@@ -52,12 +52,12 @@ def test_delete(db_test_client):
     sets = db.select_all_exercises()
     for weight_sets in sets:
   
-        db.delete_weight_set(weight_sets["machine_name"], weight_sets["gym_id"], weight_sets["exercise_date_time"])
+        db.delete_weight_set(weight_sets["machine_name"], weight_sets["gym_id"], weight_sets["exercise_date"])
 
     assert len(db.select_all_exercises()) == 0
     conn.commit()
 
-def test_workout_pull(db_test_client):
+def test_weightset_workout_pull(db_test_client):
     conn, cursor = db_test_client
     db = Weight_Set_DB(conn, cursor)
 
@@ -72,7 +72,7 @@ def test_workout_pull(db_test_client):
     assert len(workout_list) == 3
     assert workout_list[0]["machine_name"] == "Pull Up Bar"
     assert workout_list[0]["gym_id"] == 1
-    assert workout_list[0]["exercise_date_time"] == "05/08/2022"
+    assert workout_list[0]["exercise_date"] == "05/08/2022"
     assert workout_list[0]["reps"] == 10
     assert workout_list[0]["weight"] == 25
     

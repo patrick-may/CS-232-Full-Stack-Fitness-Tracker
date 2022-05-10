@@ -72,10 +72,10 @@ def init_db(config):
         (
             gym_id SMALLINT UNSIGNED,
             machine_name VARCHAR(100),
-            exercise_date_time VARCHAR(100),
+            exercise_date VARCHAR(100),
             reps TINYINT UNSIGNED,
             weight SMALLINT,
-            PRIMARY KEY (gym_id, machine_name, exercise_date_time)
+            PRIMARY KEY (gym_id, machine_name, exercise_date)
             
         );
         """)

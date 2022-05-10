@@ -58,7 +58,7 @@ class WorkoutDB:
 
         for weight_set in new_workout.exercises:
             insert_exercise_query = """
-                INSERT INTO exercise_sets (machine_name, gym_id, workout_date, reps, weight)
+                INSERT INTO exercise_sets (machine_name, gym_id, exercise_date, reps, weight)
                 VALUES (%s, %s, %s, %s, %s);
             """
 
@@ -77,17 +77,20 @@ class WorkoutDB:
         """
         self._cursor.execute(select_query, (gym_id, date))
         
-        from weight_set import Weight_Set_DB
+        from models.weight_set import Weight_Set_DB
         exercisesDB = Weight_Set_DB(self._db_conn, self._cursor)
-        exercisesDB.select_workout_exercises(gym_id, date)
-        return self._cursor.fetchall()
+        
+        vals = self._cursor.fetchall()
+        
+        if len(vals): vals[0]["exercises"] = exercisesDB.select_workout_exercises(gym_id, date)
+        return vals
     
 
     def update_workout(self, old_workout, new_workout):
-        from weight_set import Weight_Set_DB
+        from models.weight_set import Weight_Set_DB
         exercisesDB = Weight_Set_DB(self._db_conn, self._cursor)
 
-        if old_workout.gym_id == new_workout.gym_id and old_workout.timestamp == new_workout.timestamp:
+        if old_workout.user_id == new_workout.user_id and old_workout.timestamp == new_workout.timestamp:
             #then it is the "same" workout, just just update the exercises.
             for machine, user_id, timestamp, x, y in old_workout.exercises:
                 exercisesDB.delete_weight_set(machine,user_id, timestamp)
@@ -96,7 +99,7 @@ class WorkoutDB:
                 exercisesDB.insert_weight_set(machine,user_id, timestamp)
         
         else:
-            self.delete_workout(old_workout)
+            self.delete_workout(old_workout.user_id, old_workout.timestamp)
             self.insert_workout(new_workout)
 
     def delete_workout(self, gym_id, date):
@@ -108,7 +111,7 @@ class WorkoutDB:
 
         sets_delete_query = """
         DELETE FROM exercise_sets
-        WHERE gym_id=%s AND workout_date=%s;
+        WHERE gym_id=%s AND exercise_date=%s;
         """
         self._cursor.execute(sets_delete_query, (gym_id, date))
         self._db_conn.commit()
