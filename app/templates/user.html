@@ -1,0 +1,8 @@
+{% extends 'base.html' %} {% block title %} User {% endblock %} {% block content
+%} {% with messages = get_flashed_messages() %} {% if messages %} {% for msg in
+messages%}
+<p>{{msg}}</p>
+{% endfor %} {% endif %} {% endwith %}
+<h3>Welcome, {{user}}</h3>
+<p>Please enter your workout statistics</p>
+{% endblock %}

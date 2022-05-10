@@ -1,31 +1,5 @@
-<!DOCTYPE html>
-
-<html lang="en">
-    <head>
-        <meta name="viewport" content="initial-scale=1, width=device-width">
-        <title>CRUD Lifter Homepage</title>
-    </head>
-    <body>
-        <div class="css.lifter-style.center">
-            <a href="/create_member">Create Member</a>
-            <a href="/delete_member">Delete Member</a>
-            <br>
-            <a href="/create_weight_set">Add Weight Set</a>
-
-            <div>
-                <p>These are all the members:</p>
-                {% for member in data %}
-                    <td>{{ member['gym_id'] }}, {{ member['name'] }}, {{ member['age'] }}, {{ member['sex'] }}</td>
-                    <br>
-                {% endfor %}
-            </div>
-            <div>
-                <p>These are all the weight sets: </p>
-                {% for set in weight_data %}
-                    <td>{{ set['machine_name']}}, {{ set['gym_id']}}, {{ set['exercise_date_time']}}, {{ set['reps']}}, {{ set['weight']}},</td>
-                    <br>
-                {% endfor %}
-            </div>
-        </div>
-    </body>
-</html>
+{% extends 'base.html' %} {% block title %} Home Page {% endblock %} {% block
+content %}
+<h1>Welcome!</h1>
+<h2>Please login above</h2>
+{% endblock %}

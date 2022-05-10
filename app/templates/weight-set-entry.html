@@ -1,8 +1,8 @@
-{% extends "task-layout.html" %}
+{% extends "layout.html" %}
 
 {% block body %}
 <h1>New Weight Set</h1>
-    <form action="/add_weight_set" method="post">
+    <form action="/add_member" method="post">
         <input autocomplete="off" autofocus name="machine_name" placeholder="Machine Name" type="text"><br>
         <input autocomplete="off" autofocus name="user_id" placeholder="User's Gym ID" type="text"><br>
         <input autocomplete="off" autofocus name="date" placeholder="Date" type="text"><br>
