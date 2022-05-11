@@ -80,14 +80,14 @@ def add_workout(gym_id):
 
     return jsonify({"status":"success", "inserted":db.select_workout(create_id, create_date)}), 200
 
-@lifter_api_blueprint.route('/api/v1/<int:gym_id>/workouts/', methods=["GET"])
+@lifter_api_blueprint.route('/api/v1/workouts/', methods=["GET"])
 def read_workouts(gym_id):
 
     workoutDB = WorkoutDB(g.mysql_db, g.mysql_cursor)
 
     result = None
 
-    result = WorkoutDB.select_all_workouts()
+    result = WorkoutDB.select_all_workouts(gym_id=2)
 
     return jsonify({"status": "success", "workouts": result}), 200
 
