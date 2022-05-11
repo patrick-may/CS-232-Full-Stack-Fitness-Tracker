@@ -87,6 +87,47 @@ def remove_member():
     delete_db.delete_member(user_id)
     return redirect("/user")
 
+@crud_lifter_blueprint.route("/create_workout")
+def gather_workout_info():
+    if "user" not in session:
+        redirect("/login")
+
+    user = session["user"]
+    weight_db = Weight_Set_DB(g.mysql_db, g.mysql_cursor)
+    gym_db = Gym_Member_DB(g.mysql_db, g.mysql_cursor)
+    user_sets = weight_db.select_all_exercises()
+    username = gym_db.select_individual_member(user)[0]["name"]
+    return render_template("workout-home.html", user=username, member_sets=user_sets)
+
+@crud_lifter_blueprint.route("/add_workout", methods=["POST"])
+def insert_workout():
+    if "user" in session:
+        user_id = session["user"]
+    else:
+        user_id = 0
+    
+    workout_date = request.form.get("date")
+    workout_duration = request.form.get("duration")
+    exercises_list = []
+
+    b = request.form
+    #print(b)
+    #print(request.form.get("machine_name"))
+    #print(request.form.get("reps"))
+    #print(request.form.get("weight"))
+    machine_names = b.getlist("machine_name")
+    reps = b.getlist("reps")
+    weight = b.getlist("weight")
+    
+    for x in range(len(machine_names)):
+        exercises_list.append(Weight_Set(machine_names[x], user_id, workout_date, reps[x], weight[x]))
+    
+    db = WorkoutDB(g.mysql_db, g.mysql_cursor)
+    new_workout = Workout(user_id, workout_date, workout_duration, exercises_list)
+    db.insert_workout(new_workout)
+    
+    return redirect("/user")
+
 @crud_lifter_blueprint.route("/create_weight_set")
 def gather_set_info():
     return render_template("weight-set-entry.html")
@@ -104,4 +145,41 @@ def set_creation():
     weight = request.form.get("weight")
     setDB = Weight_Set_DB(g.mysql_db, g.mysql_cursor)
     setDB.insert_weight_set(Weight_Set(machine_name, user_id, date, reps, weight))
+    return redirect("/user")
+
+@crud_lifter_blueprint.route("/delete_weight_set")
+def set_remove():
+    return render_template("weight-set-delete.html")
+
+@crud_lifter_blueprint.route("/remove_weight_set", methods=["POST"])
+def set_deletion():
+    
+    if "user" in session:
+        user_id = session["user"]
+    else:
+        user_id = 0
+
+    machine_name = request.form.get("machine_name")
+    date = request.form.get("date")
+    setDB = Weight_Set_DB(g.mysql_db, g.mysql_cursor)
+    setDB.delete_weight_set(machine_name, user_id, date)
+    return redirect("/user")
+
+@crud_lifter_blueprint.route("/revise_weight")
+def revise_weight_set():
+    return render_template("weight-set-update.html")
+
+@crud_lifter_blueprint.route("/update_weight_set", methods=["POST"])
+def update_weight_set():
+    
+    if "user" in session:
+        user_id = session["user"]
+    else:
+        user_id = 0
+    machine_name = request.form.get("machine_name")
+    date = request.form.get("date")
+    reps = request.form.get("reps")
+    weight = request.form.get("weight")
+    setDB = Weight_Set_DB(g.mysql_db, g.mysql_cursor)
+    setDB.update_weight_set(Weight_Set(machine_name, user_id, date, reps, weight))
     return redirect("/user")

@@ -4,13 +4,12 @@ from datetime import datetime
 from types import NoneType
 
 class Gym_Member:
-    def __init__(self, name, age, sex):
+    def __init__(self, name, age, sex, gym_id=None):
         self._name = name
-        self._id = NoneType
+        self._id = gym_id
         self._age = age
         self._sex = sex
 
-  
     @property
     def name(self):
         return self._name

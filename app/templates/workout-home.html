@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %} User {% endblock %}
+{% block content %}
+
+{% with messages = get_flashed_messages() %} {% if messages %} {% for msg in
+    messages %}
+    <p>{{msg}}</p>
+    {% endfor %} {% endif %} {% endwith %}
+    <h3>Workout Entry for {{user}}</h3>
+<form action="add_workout" method="post"> 
+    <input
+  autocomplete="off"
+  autofocus
+  name="date"
+  placeholder="Date"
+  type="text"
+/>
+<input
+  autocomplete="off"
+  autofocus
+  name="duration"
+  placeholder="Duration"
+  type="text"
+/>
+<br>
+<hr class="solid">
+{% for x in range(2) %}
+<select name="machine_name" id="machine name">
+    <option value="Squat Rack 1">Squat Rack 1</option>
+    <option value="Squat Rack 2">Squat Rack 2</option>
+    <option value="Squat Rack 3">Squat Rack 3</option>
+    <option value="Deadlift Platform 1">Deadlift Platform 1</option>
+    <option value="Deadlift Platform 2">Deadlift Platform 2</option>
+    <option value="Deadlift Platform 3">Deadlift Platform 3</option>
+    <option value="Pull-Up Bar 1">Pull-Up Bar 1</option>
+    <option value="Pull-Up Bar 2">Pull-Up Bar 2</option>
+    <option value="Pull-Up Bar 3">Pull-Up Bar 3</option>
+    <option value="Flat Bench 1">Flat Bench 1</option>
+    <option value="Flat Bench 2">Flat Bench 2</option>
+    <option value="Flat Bench 3">Flat Bench 3</option>
+    <option value="Incline Bench 1">Incline Bench 1</option>
+    <option value="Incline Bench 2">Incline Bench 2</option>
+    <option value="Incline Bench 3">Incline Bench 3</option>
+    <option value="Decline Bench 1">Decline Bench 1</option>
+    <option value="Decline Bench 2">Decline Bench 2</option>
+    <option value="Decline Bench 3">Decline Bench 3</option>
+  </select>
+  <input
+    autocomplete="off"
+    autofocus
+    name="reps"
+    placeholder="Reps"
+    type="text"
+  />
+  <input
+    autocomplete="off"
+    autofocus
+    name="weight"
+    placeholder="Weight"
+    type="text"
+  />
+
+  <br>
+{% endfor %}
+
+
+<input type="submit" value="Add Workout">
+</form>
+{% endblock %}

@@ -1,14 +1,21 @@
 {% extends 'base.html' %} {% block title %} User {% endblock %} 
 {% block content%} 
 {% with messages = get_flashed_messages() %} {% if messages %} {% for msg in
-    messages%}
+    messages %}
     <p>{{msg}}</p>
     {% endfor %} {% endif %} {% endwith %}
     <h3>Welcome, {{user}}</h3>
     <a href="/create_weight_set">Add Weight Set</a>
+    <a href="/revise_weight">Update Weight Set</a>
+    <a href="/delete_weight_set">Delete Weight Set</a>
+    <br>
+    <hr class="solid">
+    <a href="/create_workout">Add Workout</a>
+
 
     <hr class="solid">
-    <table>
+    <p>All Weight Sets</p>
+    <table cellpadding="7">
         <TR>
             <TD class="c1">MACHINE</TD>
             <TD class="c2">DATE</TD>

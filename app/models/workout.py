@@ -6,7 +6,7 @@ Stored in another table. Current idea is to timestamp whenever an exercise is do
 And then identify exercises of that workout if they are within workout begin and workout ending
 
 """
-
+from models.weight_set import Weight_Set, Weight_Set_DB
 
 class Workout:
     def __init__(self, gym_id, date_time, duration, weight_sets):
@@ -18,6 +18,10 @@ class Workout:
     @property 
     def user_id(self):
         return self._gym_id
+
+    @user_id.setter
+    def user_id(self, new_id):
+        self._gym_id = new_id
 
     @property
     def duration(self):
@@ -77,14 +81,27 @@ class WorkoutDB:
         """
         self._cursor.execute(select_query, (gym_id, date))
         
-        from models.weight_set import Weight_Set_DB
+       
         exercisesDB = Weight_Set_DB(self._db_conn, self._cursor)
         
         vals = self._cursor.fetchall()
         
         if len(vals): vals[0]["exercises"] = exercisesDB.select_workout_exercises(gym_id, date)
         return vals
-    
+
+    def select_all_workouts(self, gym_id):
+        select_query = """
+            SELECT * FROM workouts
+            WHERE gym_id=%s
+        """    
+
+        self._cursor.execute(select_query, (gym_id,))
+
+        vals = self._cursor.fetchall()
+        if len(vals):
+            exercisesDB = Weight_Set_DB(self._db_conn, self._cursor)
+            for workouts in vals:
+                workouts["exercises"] = exercisesDB.select_workout_exercises(gym_id, workouts["workout_date"])
 
     def update_workout(self, old_workout, new_workout):
         from models.weight_set import Weight_Set_DB

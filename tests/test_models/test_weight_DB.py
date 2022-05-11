@@ -1,7 +1,14 @@
 from app.models.weight_set import Weight_Set, Weight_Set_DB
+from app.models.workout import Workout, WorkoutDB
+
+
 
 def test_create(db_test_client):
+    
     conn, cursor = db_test_client
+    #cursor.execute("ALTER TABLE exercise_sets NOCHECK CONSTRAINT ALL")
+    
+
     db = Weight_Set_DB(conn, cursor)
 
     old_size = len(db.select_all_exercises())
@@ -46,7 +53,7 @@ def test_delete(db_test_client):
     conn, cursor = db_test_client
     db = Weight_Set_DB(conn, cursor)
 
-    special_set = Weight_Set("Muscle Up Bar", 3, "05/08/2022", 6, 0)
+    special_set = Weight_Set("Muscle Up Bar", 1, "05/08/2022", 6, 0)
     db.insert_weight_set(special_set)
 
     sets = db.select_all_exercises()
@@ -75,6 +82,8 @@ def test_weightset_workout_pull(db_test_client):
     assert workout_list[0]["exercise_date"] == "05/08/2022"
     assert workout_list[0]["reps"] == 10
     assert workout_list[0]["weight"] == 25
+
+    
     
         
 
