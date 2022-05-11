@@ -11,7 +11,37 @@
     <br>
     <hr class="solid">
     <a href="/create_workout">Add Workout</a>
+    <a href="/delete_workout">Delete Workout</a>
 
+
+    
+    <hr class="solid">
+    <p>{{user}}'s Workouts</p>
+    
+    {% for workout in workout_list %}
+    <h5>Workout on {{workout["workout_date"]}}, lasting {{workout["duration"]}} minutes</h5>
+    <p>Workout's Weight Sets</p>
+    <table cellpadding="7">
+        <TR>
+            <TD class="c1">MACHINE</TD>
+            <TD class="c2">DATE</TD>
+            <TD class="c3">WEIGHT</TD>
+            <TD class="c4">REPS</TD>
+        </TR>
+    {% for set in workout["exercises"] %}
+    <TR>
+        <TD class="c1">{{set["machine_name"]}}</TD>
+        <TD class="c2">{{set["exercise_date"]}}</TD>
+        <TD class="c3">{{set["weight"]}}</TD>
+        <TD class="c4">{{set["reps"]}}</TD>
+    </TR>
+
+    {% endfor %}
+    </table>
+    <br>
+    
+    {% endfor %}
+    
 
     <hr class="solid">
     <p>All Weight Sets</p>

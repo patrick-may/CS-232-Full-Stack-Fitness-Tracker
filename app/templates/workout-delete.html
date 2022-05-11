@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}
+Workout Deletion
+{% endblock %}
+{% block content %}
+    <h1>New Member</h1>
+    <form action="/remove_workout" method="post">
+        <input autocomplete="off" autofocus name="workout_date" placeholder="Date of Workout" type="text">
+        <input type="submit" value="Delete Workout">
+    </form>
+{% endblock %}

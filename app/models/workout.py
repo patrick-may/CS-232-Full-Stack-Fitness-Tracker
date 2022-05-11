@@ -92,7 +92,7 @@ class WorkoutDB:
     def select_all_workouts(self, gym_id):
         select_query = """
             SELECT * FROM workouts
-            WHERE gym_id=%s
+            WHERE gym_id=%s;
         """    
 
         self._cursor.execute(select_query, (gym_id,))
@@ -102,6 +102,8 @@ class WorkoutDB:
             exercisesDB = Weight_Set_DB(self._db_conn, self._cursor)
             for workouts in vals:
                 workouts["exercises"] = exercisesDB.select_workout_exercises(gym_id, workouts["workout_date"])
+
+        return vals
 
     def update_workout(self, old_workout, new_workout):
         from models.weight_set import Weight_Set_DB
