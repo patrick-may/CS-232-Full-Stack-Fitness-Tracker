@@ -1,3 +1,9 @@
+"""
+test_gym_member.py
+
+used for testing gym_member object. 
+Primarily a POD class, which is why no tests for workout or weight_set, just database interfacing classes"""
+
 import pytest
 from datetime import datetime
 

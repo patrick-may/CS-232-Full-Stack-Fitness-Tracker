@@ -1,10 +1,9 @@
 """
-Data class for what a workout object will be
+workout.py
 
-Current design is a little bit tricky, as the actual exercises are
-Stored in another table. Current idea is to timestamp whenever an exercise is done
-And then identify exercises of that workout if they are within workout begin and workout ending
-
+Includes:
+    Workout - primarily a POD class for workouts, which have gym_id, date, duration, and list of weight sets
+    WorkoutDB - class that interfaces Workout to database
 """
 from models.weight_set import Weight_Set, Weight_Set_DB
 
@@ -47,12 +46,35 @@ class Workout:
         self._weight_sets.append(new_ex)
 
 class WorkoutDB:
+    """
+    WorkoutDB
+        Interfaces to workouts table in database
+
+    Currently supports:
+        Create - insert_workout(self, new_workout)
+        Read - select_workout(self, gym_id, date),
+               select_all_workouts(self, gym_id),
+               select_every_workout(self)
+        Update - update_workout(self, old_workout, new_workout)
+        Delete - delete_workout(self, gym_id, date)
+    """
+
     def __init__(self, db_conn, db_cursor):
         self._db_conn = db_conn
         self._cursor = db_cursor
 
     #Create
     def insert_workout(self, new_workout):
+        """
+        Inserts a workout into database, which includes all exercises that go along with the workout
+
+        ARGS:
+            self - python syntax
+            new_workout - Workout object to be inserted
+
+        RETURNS:
+            Commits object creation. Returns Nothing.
+        """
         
         insert_workout_query = """
             INSERT INTO workouts (gym_id, workout_date, duration)
@@ -76,6 +98,18 @@ class WorkoutDB:
     
     #Read
     def select_workout(self, gym_id, date):
+        """
+        Selects an individual workout by gym_id and date
+
+        ARGS:
+            self - python syntax
+            gym_id - user's id 
+            date - date of specific workout
+
+        RETURNS:
+            Information on specific workout
+        """
+
         select_query = """
             SELECT * FROM workouts
             WHERE gym_id=%s AND workout_date=%s;
@@ -91,6 +125,18 @@ class WorkoutDB:
         return vals
 
     def select_all_workouts(self, gym_id):
+        """
+        Selects an individual's workouts by gym_id
+
+        ARGS:
+            self - python syntax
+            gym_id - user's id 
+            date - date of specific workout
+
+        RETURNS:
+            Information on specific workouts
+        """
+
         select_query = """
             SELECT * FROM workouts
             WHERE gym_id=%s;
@@ -107,6 +153,16 @@ class WorkoutDB:
         return vals
 
     def select_every_workout(self):
+        """
+        Selects all workouts
+
+        ARGS:
+            self - python syntax
+
+        RETURNS:
+            List of information on every workout in database
+        """
+
         select_query = """
             SELECT * FROM workouts
         """    
@@ -124,6 +180,17 @@ class WorkoutDB:
 
 
     def update_workout(self, old_workout, new_workout):
+        """
+        Updates a workout
+
+        ARGS:
+            self - python syntax
+            old_workout - Workout object that is being updated
+            new_workout - Workout object with relavent updates
+
+        RETURNS:
+            Commits update to database. returns nothing.
+        """
         from models.weight_set import Weight_Set_DB
         exercisesDB = Weight_Set_DB(self._db_conn, self._cursor)
 
@@ -140,6 +207,18 @@ class WorkoutDB:
             self.insert_workout(new_workout)
 
     def delete_workout(self, gym_id, date):
+        """
+        Deletes an individual workout by gym_id and date
+
+        ARGS:
+            self - python syntax
+            gym_id - user's id 
+            date - date of specific workout
+
+        RETURNS:
+            Commits delete into database. Returns Nothing.
+        """
+        
         delete_query = """
         DELETE FROM workouts
         WHERE gym_id=%s AND workout_date=%s;

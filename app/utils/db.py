@@ -23,6 +23,13 @@ def connect_db(config):
 # Setup for the Database
 #   Will erase the database if it exists
 def init_db(config):
+    """
+    Creates the database for flask app
+
+    INPUT:
+        config - values of individual's database configuration
+
+    """
     conn = mysql.connector.connect(
         host=config["DBHOST"],
         user=config["DBUSERNAME"],
@@ -32,19 +39,14 @@ def init_db(config):
     cursor.execute(f"DROP DATABASE IF EXISTS {config['DATABASE']};")
     cursor.execute(f"CREATE DATABASE {config['DATABASE']};")
     cursor.execute(f"use {config['DATABASE']};")
-    #cursor.execute(
-    #    f""" 
-    #    CREATE TABLE tasks
-    #    (
-    #        id SMALLINT UNSIGNED AUTO_INCREMENT NOT NULL,
-    #        description VARCHAR(50),
-    #        creation_datetime timestamp,
-    #        completed TINYINT(1),
-    #        CONSTRAINT pk_todo PRIMARY KEY (id)
-    #    );
-    #    """
-    #)
-    #member table init
+
+    # Current working database is not fully normalized, with exercise_sets allowing duplicate entries
+    # If we were to rework the test cases and database model functions, workouts should be formally foreign key
+    # linked to weight_sets by date. 
+
+    # Additional information in exercise_sets to allow sets of same weight on same machine at same day
+    # could be another avenue of improving the database design. (i.e. timestamp with minutes, not just day)
+    
     cursor.execute(
         """ 
         CREATE TABLE gym_members
