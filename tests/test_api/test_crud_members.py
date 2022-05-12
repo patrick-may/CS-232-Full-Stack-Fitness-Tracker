@@ -2,6 +2,11 @@ import json
 
 
 def test_mem_insert(flask_test_client):
+    """
+    GIVEN an API insert call
+    WHEN a member is inserted
+    THEN check if member is in the database and API return is correct
+    """
 
     #old_member_list_len = len(flask_test_client.get("/api/v1/members"))
 
@@ -29,6 +34,11 @@ def test_mem_insert(flask_test_client):
 
 
 def test_member_update(flask_test_client):
+    """
+    GIVEN an API update call
+    WHEN a member is updated
+    THEN check if member updates are in the database and API return is correct
+    """
 
     json_data = {"gym_id": 1, "uname": "Cooler Jimothy",
                  "uage": 42, "usex": "F"}
@@ -45,6 +55,11 @@ def test_member_update(flask_test_client):
 
 
 def test_member_delete(flask_test_client):
+    """
+    GIVEN an API delete call
+    WHEN a member is deleted
+    THEN check if member is in the database and API return is correct
+    """
 
     json_data = {"gym_id": 1}
 
@@ -60,6 +75,11 @@ def test_member_delete(flask_test_client):
 
 
 def test_member_get(flask_test_client):
+    """
+    GIVEN an API get call
+    WHEN a member is called
+    THEN check if member data is returned correctly and API return is correct
+    """
 
     # first do a general request
     request = flask_test_client.get("/api/v1/members/")
