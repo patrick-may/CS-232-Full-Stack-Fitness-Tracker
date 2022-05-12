@@ -53,13 +53,14 @@ class WorkoutDB:
 
     #Create
     def insert_workout(self, new_workout):
+        
         insert_workout_query = """
             INSERT INTO workouts (gym_id, workout_date, duration)
             VALUES (%s, %s, %s);
         """
         workout_tuple = (new_workout.user_id, new_workout.timestamp, new_workout.duration)
         self._cursor.execute(insert_workout_query, workout_tuple)
-
+        
         for weight_set in new_workout.exercises:
             insert_exercise_query = """
                 INSERT INTO exercise_sets (machine_name, gym_id, exercise_date, reps, weight)
@@ -68,7 +69,7 @@ class WorkoutDB:
 
             exercise_tuple = (weight_set.machine_name, weight_set.user_id, 
                         weight_set.timestamp, weight_set.reps, weight_set.weight)
-
+        
             self._cursor.execute(insert_exercise_query, exercise_tuple)
         
         self._db_conn.commit()
@@ -104,6 +105,23 @@ class WorkoutDB:
                 workouts["exercises"] = exercisesDB.select_workout_exercises(gym_id, workouts["workout_date"])
 
         return vals
+
+    def select_every_workout(self):
+        select_query = """
+            SELECT * FROM workouts
+        """    
+
+        self._cursor.execute(select_query)
+
+        vals = self._cursor.fetchall()
+        
+        if len(vals):
+            exercisesDB = Weight_Set_DB(self._db_conn, self._cursor)
+            for workouts in vals:
+                workouts["exercises"] = exercisesDB.select_workout_exercises(workouts["gym_id"], workouts["workout_date"])
+
+        return vals
+
 
     def update_workout(self, old_workout, new_workout):
         from models.weight_set import Weight_Set_DB
